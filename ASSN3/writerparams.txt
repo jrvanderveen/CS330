@@ -1,0 +1,4 @@
+dburl=jdbc:mysql://mysql.cs.wwu.edu/vander64
+useSSL=false
+user=vander64
+password=,1yOHOMEE11

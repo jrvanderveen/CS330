@@ -1,0 +1,6 @@
+select Ticker, max(min(TransDate)) as minDate, min(max(TransDate)) as maxDate, count(distinct TransDate) as TradingDays
+            from Company left outer join PriceVolume using(Ticker)   
+            where Industry = 'Telecommunications Services'   
+            group by Ticker   
+            having TradingDays >= 150  
+            order by Ticker;

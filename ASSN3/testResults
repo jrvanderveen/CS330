@@ -1,0 +1,21 @@
+Test connection jdbc:mysql://mysql.cs.wwu.edu/vander64 vander64 established.
+Query: select Industry, count(*) from Performance group by Industry order by Industry; 
+Test #1 ... OK
+Query: select Industry, min(Ticker) as Ticker, count(distinct Ticker) as NumTicker from Performance group by Industry order by Industry; 
+Test #2 ... OK
+Query: select Ticker, StartDate, EndDate, round(TickerReturn, 4) as TickerReturn, round(IndustryReturn, 4) as IndustryReturn from Performance where Industry = 'Telecommunications Services' order by StartDate, Ticker limit 50; 
+Test #3 ... OK
+Query: select Ticker, StartDate, EndDate, round(TickerReturn, 4) as TickerReturn, round(IndustryReturn, 4) as IndustryReturn from Performance order by TickerReturn - IndustryReturn DESC limit 30; 
+Test #4 ... OK
+Query: select Ticker, StartDate, EndDate, round(TickerReturn, 4) as TickerReturn, round(IndustryReturn, 4) as IndustryReturn from Performance order by TickerReturn - IndustryReturn ASC limit 20; 
+Test #5 ... OK
+Query: select Industry, StartDate, EndDate, round(sum(TickerReturn), 4) as TickerSum, round(sum(IndustryReturn), 4) as IndustrySum from Performance group by Industry, StartDate, EndDate having TickerSum != IndustrySum order by Industry, StartDate; 
+Test #6 ... OK
+Query: select Ticker, StartDate, EndDate, round(TickerReturn, 4) as TickerReturn, round(IndustryReturn, 4) as IndustryReturn from Performance where Ticker = 'GMCR' order by StartDate; 
+Test #7 ... OK
+Query: select Ticker, StartDate, EndDate, round(TickerReturn, 4) as TickerReturn, round(IndustryReturn, 4) as IndustryReturn from Performance where Ticker = 'LVLT' order by StartDate; 
+Test #8 ... OK
+Query: select Industry, min(IntervalCount) as MinInterval, max(IntervalCount) as MaxInterval from (select Industry, Ticker, count(*) as IntervalCount from Performance group by Industry, Ticker) as TickerCount group by Industry having MinInterval != MaxInterval; 
+Test #9 ... OK
+Query: select Industry, Performance.Ticker, StartDate, EndDate, TickerReturn as PerformanceReturn, ClosePV.ClosePrice / OpenPV.OpenPrice - 1 as PVReturn from (Performance join reedy330.PriceVolume as OpenPV on Performance.Ticker = OpenPV.Ticker and Performance.StartDate = OpenPV.TransDate) join reedy330.PriceVolume as ClosePV on Performance.Ticker = ClosePV.Ticker and Performance.EndDate = ClosePV.TransDate where Industry = 'Consumer Staples' and round(TickerReturn, 2) != round(ClosePV.ClosePrice / OpenPV.OpenPrice - 1, 2) order by Industry, Performance.Ticker, StartDate; 
+Test #10 ... OK
